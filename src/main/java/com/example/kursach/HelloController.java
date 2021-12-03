@@ -43,6 +43,17 @@ public class HelloController {
     @FXML
     void initialize() {
 
+        // ------- Настройка радио кнопок сотрудника и клиента ------- //
+        worker_radio_button.setOnAction(actionEvent -> {
+            client_radio_button.setSelected(false);
+        });
+
+        client_radio_button.setOnAction(actionEvent -> {
+            worker_radio_button.setSelected(false);
+        });
+
+
+        // ------- Настройка кнопки входа в аккаунт ------- //
         login_button.setOnAction(actionEvent -> {
             String login_text = login_field.getText().trim();
             String password_text = password_field.getText().trim();

@@ -76,4 +76,20 @@ public class DataBaseHandler extends Configs {
 
         return resSet;
     }
+
+    public ResultSet getClient() {
+
+        ResultSet resSet = null;
+
+        String select = "SELECT * FROM " + Const.CLIENT_TABLE;
+
+        try {
+            PreparedStatement prSt = getDbConnection().prepareStatement(select);
+            resSet = prSt.executeQuery();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return resSet;
+    }
 }

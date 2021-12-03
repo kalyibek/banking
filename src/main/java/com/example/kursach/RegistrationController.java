@@ -55,6 +55,14 @@ public class RegistrationController {
             load_window("hello-view.fxml");
         });
 
+        worker_radio_button.setOnAction(actionEvent -> {
+            client_radio_button.setSelected(false);
+        });
+
+        client_radio_button.setOnAction(actionEvent -> {
+            worker_radio_button.setSelected(false);
+        });
+
         submit_registration_button.setOnAction(actionEvent -> {
 
             String first_name_text = first_name_field.getText().trim();
@@ -72,7 +80,7 @@ public class RegistrationController {
                     dbHandler.registrate_worker(worker);
                 } else {
 
-                    Client client = new Client(first_name_text, last_name_text, login_text, password_text);
+                    String money_som = "", money_dollar = "";
 
                     TextInputDialog dialog_som = new TextInputDialog("");
                     dialog_som.setTitle("Сумма денег.");
@@ -80,7 +88,7 @@ public class RegistrationController {
                     dialog_som.setContentText("Сом:");
                     Optional<String> result_som = dialog_som.showAndWait();
                     if (result_som.isPresent()) {
-                        client.setMoney_som(Float.parseFloat(result_som.get()));
+                        money_som = result_som.get();
                     }
 
                     TextInputDialog dialog_dollar = new TextInputDialog("");
@@ -89,8 +97,10 @@ public class RegistrationController {
                     dialog_dollar.setContentText("Доллар:");
                     Optional<String> result_dollar = dialog_dollar.showAndWait();
                     if (result_dollar.isPresent()) {
-                        client.setMoney_dollar(Float.parseFloat(result_dollar.get()));
+                        money_dollar = result_dollar.get();
                     }
+
+                    Client client = new Client(first_name_text, last_name_text, login_text, password_text, money_som, money_dollar);
 
                     dbHandler.registrate_client(client);
                 }

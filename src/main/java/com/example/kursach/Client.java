@@ -10,15 +10,25 @@ public class Client {
     private float money_dollar;
 
     Client (String first_name, String last_name, String user_name,
-            String password /*, float money_som, float money_dollar*/) {
+            String password, String money_som, String money_dollar) {
 
         this.first_name = first_name;
         this.last_name = last_name;
         this.user_name = user_name;
         this.password = password;
-        //this.money_som = money_som;
-        //this.money_dollar = money_dollar;
+        if (!money_som.equals("")) {
+            this.money_som = Float.parseFloat(money_som);
+        } else {
+            this.money_som = 0;
+        }
+        if (!money_dollar.equals("")) {
+            this.money_dollar = Float.parseFloat(money_dollar);
+        } else {
+            this.money_dollar = 0;
+        }
     }
+
+    Client() {}
 
     public String getFirst_name() {
         return first_name;
