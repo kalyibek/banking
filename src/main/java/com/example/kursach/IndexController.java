@@ -5,19 +5,16 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 
 public class IndexController {
 
@@ -26,6 +23,9 @@ public class IndexController {
 
     @FXML
     private URL location;
+
+    @FXML
+    private Button clients_show_button;
 
     @FXML
     private Button exit_button;
@@ -49,6 +49,9 @@ public class IndexController {
     private TableColumn<Client, Integer> number_column;
 
     @FXML
+    private TextField search_field;
+
+    @FXML
     private Button search_client_button;
 
     @FXML
@@ -59,8 +62,7 @@ public class IndexController {
     @FXML
     void initialize() {
 
-        // ------ Вывод таблицы клиентов ------- //
-        show_table_clients();
+        DataBaseHandler dbHandler = new DataBaseHandler();
 
         // ------ Настройка кнопки выхода ------- //
         exit_button.setOnAction(actionEvent -> {
@@ -68,7 +70,47 @@ public class IndexController {
             exit_button.getScene().getWindow().hide();
         });
 
+        // ------ Вывод таблицы всех клиентов ------- //
+        clients_show_button.setOnAction(actionEvent -> {
+            ResultSet clients_all = dbHandler.getClient();
+            show_table_clients(clients_all);
+        });
 
+        // ------ Вывод таблицы найденных клиентов ------- //
+        search_client_button.setOnAction(actionEvent -> {
+            Client client = new Client();
+            client.setFirst_name(search_field.getText());
+            ResultSet client_search = dbHandler.getClientSearch(client);
+            show_table_clients(client_search);
+        });
+
+
+    }
+
+    private void show_table_clients(ResultSet clients) {
+
+        clients_list.clear(); // ОЧИСТКА СПИСКА КЛИЕНТОВ
+
+        try {
+            while (clients.next()) {
+
+                String first_name = clients.getString(2);
+                String last_name = clients.getString(3);
+                String money_som = clients.getString(6);
+                String money_dollar = clients.getString(7);
+
+                clients_list.add(new Client(first_name, last_name, null, null, money_som, money_dollar));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        first_name_column.setCellValueFactory(new PropertyValueFactory<Client, String>("first_name"));
+        last_name_column.setCellValueFactory(new PropertyValueFactory<Client, String>("last_name"));
+        money_som_column.setCellValueFactory(new PropertyValueFactory<Client, Double>("money_som"));
+        money_dollar_column.setCellValueFactory(new PropertyValueFactory<Client, Double>("money_dollar"));
+
+        clients_table.setItems(clients_list); // ОТОБРАЖЕНИЕ ТАБЛИЦЫ
     }
 
     private void load_window(String url) {
@@ -86,33 +128,6 @@ public class IndexController {
         Stage stage = new Stage();
         stage.setScene(new Scene(root));
         stage.show();
-    }
-
-    private void show_table_clients() {
-
-        DataBaseHandler dbHandler = new DataBaseHandler();
-        ResultSet result_clients = dbHandler.getClient();
-
-        try {
-            while (result_clients.next()) {
-
-                String first_name = result_clients.getString(2);
-                String last_name = result_clients.getString(3);
-                String money_som = result_clients.getString(6);
-                String money_dollar = result_clients.getString(7);
-
-                clients_list.add(new Client(first_name, last_name, null, null, money_som, money_dollar));
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        first_name_column.setCellValueFactory(new PropertyValueFactory<Client, String>("first_name"));
-        last_name_column.setCellValueFactory(new PropertyValueFactory<Client, String>("last_name"));
-        money_som_column.setCellValueFactory(new PropertyValueFactory<Client, Double>("money_som"));
-        money_dollar_column.setCellValueFactory(new PropertyValueFactory<Client, Double>("money_dollar"));
-
-        clients_table.setItems(clients_list); // ОТОБРАЖЕНИЕ ТАБЛИЦЫ
     }
 }
 

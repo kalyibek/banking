@@ -80,11 +80,27 @@ public class DataBaseHandler extends Configs {
     public ResultSet getClient() {
 
         ResultSet resSet = null;
-
         String select = "SELECT * FROM " + Const.CLIENT_TABLE;
 
         try {
             PreparedStatement prSt = getDbConnection().prepareStatement(select);
+            resSet = prSt.executeQuery();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return resSet;
+    }
+
+    public ResultSet getClientSearch(Client client) {
+
+        ResultSet resSet = null;
+        String select = "SELECT * FROM " + Const.CLIENT_TABLE + " WHERE " + Const.CLIENTS_FIRSTNAME + "=?";
+
+        try {
+            PreparedStatement prSt = getDbConnection().prepareStatement(select);
+            prSt.setString(1, client.getFirst_name());
+
             resSet = prSt.executeQuery();
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();

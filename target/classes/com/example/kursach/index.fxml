@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
@@ -11,19 +12,19 @@
     <children>
         <AnchorPane layoutY="103.0" prefHeight="500.0" prefWidth="800.0" style="-fx-background-color: #fafafa;">
             <children>
-            <Button fx:id="search_client_button" layoutX="54.0" layoutY="39.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="127.0" style="-fx-background-color: #F39C63;" text="Поиск" textAlignment="RIGHT" textFill="#fcf6f6">
+            <Button fx:id="search_client_button" layoutX="675.0" layoutY="35.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="81.0" style="-fx-background-color: #F39C63;" text="Поиск" textAlignment="RIGHT" textFill="#fcf6f6">
                <font>
-                  <Font name="Monotype Corsiva" size="24.0" />
+                  <Font name="Monotype Corsiva" size="18.0" />
                </font>
             </Button>
-            <Button fx:id="transactions_button" layoutX="54.0" layoutY="104.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="127.0" style="-fx-background-color: #F39C63;" text="Переводы" textAlignment="RIGHT" textFill="#fcf6f6">
+            <Button fx:id="transactions_button" layoutX="54.0" layoutY="357.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="128.0" style="-fx-background-color: #F39C63;" text="Переводы" textAlignment="RIGHT" textFill="#fcf6f6">
                <font>
                   <Font name="Monotype Corsiva" size="25.0" />
                </font>
             </Button>
-            <Button fx:id="exit_button" layoutX="54.0" layoutY="418.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="98.0" style="-fx-background-color: #F39C63;" text="Выйти" textAlignment="RIGHT" textFill="#fcf6f6">
+            <Button fx:id="exit_button" layoutX="54.0" layoutY="418.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="128.0" style="-fx-background-color: #F39C63;" text="Выйти" textAlignment="RIGHT" textFill="#fcf6f6">
                <font>
-                  <Font name="Monotype Corsiva" size="21.0" />
+                  <Font name="Monotype Corsiva" size="25.0" />
                </font>
             </Button>
             <TableView fx:id="clients_table" layoutX="221.0" layoutY="89.0" prefHeight="382.0" prefWidth="535.0">
@@ -35,6 +36,12 @@
                   <TableColumn fx:id="money_dollar_column" prefWidth="104.0" text="Деньги в USD" />
                </columns>
             </TableView>
+            <TextField fx:id="search_field" layoutX="354.0" layoutY="36.0" prefHeight="35.0" prefWidth="302.0" promptText="Поиск" />
+            <Button fx:id="clients_show_button" layoutX="54.0" layoutY="295.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="128.0" style="-fx-background-color: #F39C63;" text="Весь список" textAlignment="RIGHT" textFill="#fcf6f6">
+               <font>
+                  <Font name="Monotype Corsiva" size="22.0" />
+               </font>
+            </Button>
             </children>
         </AnchorPane>
         <Label layoutX="298.0" layoutY="14.0" prefHeight="78.0" prefWidth="268.0" text="Banking online!" textFill="#fcf6f6">
