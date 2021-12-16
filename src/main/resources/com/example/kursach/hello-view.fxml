@@ -4,30 +4,37 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="700.0" style="-fx-background-color: #2E3348;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.kursach.HelloController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="449.0" prefWidth="700.0" style="-fx-background-color: #2E3348;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.kursach.HelloController">
    <children>
-      <AnchorPane layoutY="103.0" prefHeight="306.0" prefWidth="700.0" style="-fx-background-color: #fafafa;">
+      <AnchorPane layoutY="103.0" prefHeight="263.0" prefWidth="694.0" style="-fx-background-color: #fafafa;">
          <children>
-            <Button fx:id="registration_button" layoutX="328.0" layoutY="167.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="173.0" style="-fx-background-color: #F39C63;" text="Регистрация" textAlignment="RIGHT" textFill="#fcf6f6">
+            <ImageView fitHeight="263.0" fitWidth="700.0" opacity="0.63">
+               <image>
+                  <Image url="@Banking-Technology-Vision-Innovation-COVID.jpg" />
+               </image>
+            </ImageView>
+            <Button fx:id="registration_button" layoutX="328.0" layoutY="167.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="173.0" style="-fx-background-color: #2E3348;" text="Registration" textAlignment="RIGHT" textFill="#fcf6f6">
                <font>
-                  <Font name="Monotype Corsiva" size="25.0" />
+                  <Font name="Leelawadee UI Semilight" size="20.0" />
                </font>
             </Button>
-            <TextField fx:id="login_field" layoutX="199.0" layoutY="72.0" prefHeight="35.0" prefWidth="302.0" promptText="Логин" />
-            <TextField fx:id="password_field" layoutX="199.0" layoutY="118.0" prefHeight="35.0" prefWidth="302.0" promptText="Пароль" />
-            <Button fx:id="login_button" layoutX="199.0" layoutY="167.0" mnemonicParsing="false" prefHeight="49.0" prefWidth="110.0" style="-fx-background-color: #F39C63;" text="Войти" textAlignment="RIGHT" textFill="#fcf6f6">
+            <TextField fx:id="login_field" layoutX="199.0" layoutY="72.0" prefHeight="35.0" prefWidth="302.0" promptText="user name" />
+            <TextField fx:id="password_field" layoutX="199.0" layoutY="118.0" prefHeight="35.0" prefWidth="302.0" promptText="password" />
+            <Button fx:id="login_button" layoutX="199.0" layoutY="167.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="110.0" style="-fx-background-color: #2E3348;" text="Log in" textAlignment="RIGHT" textFill="#fcf6f6">
                <font>
-                  <Font name="Monotype Corsiva" size="25.0" />
+                  <Font name="Leelawadee UI Semilight" size="20.0" />
                </font>
             </Button>
-            <RadioButton fx:id="worker_radio_button" layoutX="241.0" layoutY="38.0" mnemonicParsing="false" text="Сотрудник" />
-            <RadioButton fx:id="client_radio_button" layoutX="371.0" layoutY="38.0" mnemonicParsing="false" text="Клиент" />
+            <RadioButton fx:id="worker_radio_button" layoutX="268.0" layoutY="38.0" mnemonicParsing="false" text="Worker" />
+            <RadioButton fx:id="client_radio_button" layoutX="363.0" layoutY="38.0" mnemonicParsing="false" text="Client" />
          </children>
       </AnchorPane>
-      <Label layoutX="216.0" prefHeight="78.0" prefWidth="268.0" text="Banking online!" textFill="#fcf6f6">
+      <Label layoutX="224.0" prefHeight="78.0" prefWidth="252.0" text="Banking online!" textFill="#fcf6f6">
          <font>
             <Font name="Harlow Solid Italic" size="37.0" />
          </font>

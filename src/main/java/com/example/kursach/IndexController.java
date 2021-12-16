@@ -71,9 +71,11 @@ public class IndexController {
         });
 
         // ------ Вывод таблицы всех клиентов ------- //
+        ResultSet clients_all_main = dbHandler.getClient();
+        show_table_clients(clients_all_main);
         clients_show_button.setOnAction(actionEvent -> {
-            ResultSet clients_all = dbHandler.getClient();
-            show_table_clients(clients_all);
+            ResultSet clients_all_from_button = dbHandler.getClient();
+            show_table_clients(clients_all_from_button);
         });
 
         // ------ Вывод таблицы найденных клиентов ------- //

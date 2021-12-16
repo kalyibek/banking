@@ -109,3 +109,8 @@ public class DataBaseHandler extends Configs {
         return resSet;
     }
 }
+
+//select Fname, Lname, s.b from client
+//INNER JOIN
+//(select debtor_id as a, sum(sum) as b from credit group by debtor_id) s
+//ON client_id = s.a

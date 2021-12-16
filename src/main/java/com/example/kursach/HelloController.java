@@ -10,8 +10,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 public class HelloController {
@@ -39,6 +42,9 @@ public class HelloController {
 
     @FXML
     private Button registration_button;
+
+    @FXML
+    private ImageView background_image;
 
     @FXML
     void initialize() {
