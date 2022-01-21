@@ -57,6 +57,9 @@ public class IndexController {
     @FXML
     private Button transactions_button;
 
+    @FXML
+    private Button credits_button;
+
     ObservableList<Client> clients_list = FXCollections.observableArrayList();
 
     @FXML
@@ -86,6 +89,12 @@ public class IndexController {
             show_table_clients(client_search);
         });
 
+
+        // ------ Вывод таблицы кредитов ------- //
+        credits_button.setOnAction((actionEvent -> {
+            load_window("index_test.fxml");
+            credits_button.getScene().getWindow().hide();
+        }));
 
     }
 

@@ -20,4 +20,12 @@ public class Const {
     public static final String CLIENTS_MONEYSOM = "moneysom";
     public static final String CLIENTS_MONEYDOLLAR = "moneydollar";
 
+    public static final String CREDIT_TABLE = "credits";
+
+    public static final String CREDIT_ID = "idcredits";
+    public static final String CREDITS_AMOUNT = "sum";
+    public static final String CREDITS_CURRENCY = "currency";
+    public static final String CREDITS_DATE = "credit_date";
+    public static final String CREDITS_CLIENT_ID = "client_id";
+
 }

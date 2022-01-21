@@ -109,7 +109,7 @@ public class HelloController {
         }
 
         if (counter_workers >= 1) {
-            load_window("index.fxml");
+            load_window("index_test.fxml");
         } else {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             load_window("hello-view.fxml");

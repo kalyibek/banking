@@ -23,7 +23,12 @@
                   <Font name="Leelawadee UI Semilight" size="19.0" />
                </font>
             </Button>
-            <Button fx:id="transactions_button" layoutX="422.0" layoutY="10.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="146.0" style="-fx-background-color: #2E3348;" text="Transactions" textAlignment="RIGHT" textFill="#fcf6f6">
+            <Button fx:id="transactions_button" layoutX="540.0" layoutY="11.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="146.0" style="-fx-background-color: #2E3348;" text="Transactions" textAlignment="RIGHT" textFill="#fcf6f6">
+               <font>
+                  <Font name="Leelawadee UI Semilight" size="20.0" />
+               </font>
+            </Button>
+            <Button fx:id="credits_button" layoutX="408.0" layoutY="11.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="146.0" style="-fx-background-color: #2E3348;" text="Credits" textAlignment="RIGHT" textFill="#fcf6f6">
                <font>
                   <Font name="Leelawadee UI Semilight" size="20.0" />
                </font>

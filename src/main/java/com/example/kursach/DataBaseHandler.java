@@ -108,9 +108,70 @@ public class DataBaseHandler extends Configs {
 
         return resSet;
     }
-}
 
-//select Fname, Lname, s.b from client
-//INNER JOIN
-//(select debtor_id as a, sum(sum) as b from credit group by debtor_id) s
-//ON client_id = s.a
+    public ResultSet getCredits() throws SQLException, ClassNotFoundException {
+
+        ResultSet resSet;
+
+        String select = "SELECT " + Const.CREDITS_AMOUNT + "," +  Const.CREDITS_CURRENCY + "," + Const.CREDITS_DATE +
+                "," + " CONCAT(" + Const.CLIENTS_FIRSTNAME + ", ' '," + Const.CLIENTS_LASTNAME + ") AS debtor FROM " +
+                Const.CLIENT_TABLE + " INNER JOIN " + Const.CREDIT_TABLE + " ON " + Const.CLIENTS_ID + "=" + Const.CREDITS_CLIENT_ID;
+
+        PreparedStatement prSt = getDbConnection().prepareStatement(select);
+        resSet = prSt.executeQuery();
+
+        return resSet;
+    }
+
+    public ResultSet getCreditSearch(Client client) throws SQLException, ClassNotFoundException {
+
+        ResultSet resSet;
+
+        String select = "SELECT " + Const.CREDITS_AMOUNT + "," +  Const.CREDITS_CURRENCY + "," + Const.CREDITS_DATE +
+                "," + " CONCAT(" + Const.CLIENTS_FIRSTNAME + ", ' '," + Const.CLIENTS_LASTNAME + ") AS debtor FROM " +
+                Const.CLIENT_TABLE + " INNER JOIN " + Const.CREDIT_TABLE + " ON " + Const.CLIENTS_ID + "=" + Const.CREDITS_CLIENT_ID +
+                " WHERE " + Const.CLIENTS_FIRSTNAME + "=?";
+
+        PreparedStatement prSt = getDbConnection().prepareStatement(select);
+        prSt.setString(1, client.getFirst_name());
+        resSet = prSt.executeQuery();
+
+        return resSet;
+    }
+
+
+    public ResultSet getMaxCredit(String currency) throws SQLException, ClassNotFoundException {
+
+        ResultSet resSet;
+
+        String select = "SELECT " + Const.CREDITS_AMOUNT + "," +  Const.CREDITS_CURRENCY + "," + Const.CREDITS_DATE +
+                "," + " CONCAT(" + Const.CLIENTS_FIRSTNAME + ", ' '," + Const.CLIENTS_LASTNAME + ") AS debtor FROM " +
+                Const.CLIENT_TABLE + " INNER JOIN " + Const.CREDIT_TABLE + " ON " + Const.CLIENTS_ID + "=" +
+                Const.CREDITS_CLIENT_ID + " WHERE " + Const.CREDITS_AMOUNT + " IN (SELECT MAX(" + Const.CREDITS_AMOUNT +
+                ") FROM " + Const.CREDIT_TABLE + " WHERE " + Const.CREDITS_CURRENCY + "=?)";
+
+        PreparedStatement prSt = getDbConnection().prepareStatement(select);
+        prSt.setString(1, currency);
+        resSet = prSt.executeQuery();
+
+        return resSet;
+    }
+
+
+    public ResultSet getMinCredit(String currency) throws SQLException, ClassNotFoundException {
+
+        ResultSet resSet;
+
+        String select = "SELECT " + Const.CREDITS_AMOUNT + "," +  Const.CREDITS_CURRENCY + "," + Const.CREDITS_DATE +
+                "," + " CONCAT(" + Const.CLIENTS_FIRSTNAME + ", ' '," + Const.CLIENTS_LASTNAME + ") AS debtor FROM " +
+                Const.CLIENT_TABLE + " INNER JOIN " + Const.CREDIT_TABLE + " ON " + Const.CLIENTS_ID + "=" +
+                Const.CREDITS_CLIENT_ID + " WHERE " + Const.CREDITS_AMOUNT + " IN (SELECT MIN(" + Const.CREDITS_AMOUNT +
+                ") FROM " + Const.CREDIT_TABLE + " WHERE " + Const.CREDITS_CURRENCY + "=?)";
+
+        PreparedStatement prSt = getDbConnection().prepareStatement(select);
+        prSt.setString(1, currency);
+        resSet = prSt.executeQuery();
+
+        return resSet;
+    }
+}
