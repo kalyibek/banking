@@ -54,9 +54,6 @@ public class IndexTestController {
     private TableColumn<Credit, String> debtor_column;
 
     @FXML
-    private TableColumn<Credit, Integer> number_column1;
-
-    @FXML
     private Button exit_button;
 
     @FXML
@@ -75,7 +72,28 @@ public class IndexTestController {
     private TableColumn<Client, Float> money_som_column;
 
     @FXML
-    private TableColumn<Client, Integer> number_column;
+    private TableView<Transaction> transaction_table;
+
+    @FXML
+    private TableColumn<Transaction, Float> transaction_amount_column;
+
+    @FXML
+    private TableColumn<Transaction, String> transaction_city_column;
+
+    @FXML
+    private TableColumn<Transaction, String> transaction_code_column;
+
+    @FXML
+    private TableColumn<Transaction, String> transaction_country_column;
+
+    @FXML
+    private TableColumn<Transaction, String> transaction_currency_column;
+
+    @FXML
+    private TableColumn<Transaction, String> transaction_receiver_column;
+
+    @FXML
+    private TableColumn<Transaction, String> transaction_sender_column;
 
     @FXML
     private Button refresh_button;
@@ -92,8 +110,12 @@ public class IndexTestController {
     @FXML
     private Button min_button;
 
+    @FXML
+    private Button make_transaction_button;
+
     ObservableList<Client> clients_list = FXCollections.observableArrayList();
     ObservableList<Credit> credits_list = FXCollections.observableArrayList();
+    ObservableList<Transaction> transactions_list = FXCollections.observableArrayList();
 
     @FXML
     void initialize() throws SQLException, ClassNotFoundException {
@@ -108,6 +130,12 @@ public class IndexTestController {
         // ------ Вывод таблицы кредитов ------- //
         ResultSet credits_all_main = dbHandler.getCredits();
         show_table_credits(credits_all_main);
+
+
+        // ------ Вывод таблицы транзакций ------- //
+        ResultSet transactions_all_main = dbHandler.getTransactions();
+        show_table_transactions(transactions_all_main);
+
 
         // ------ Настройка кнопки выхода ------- //
         exit_button.setOnAction(actionEvent -> {
@@ -125,6 +153,9 @@ public class IndexTestController {
                 } else if (show_credits_tab.isSelected()) {
                     ResultSet credits_all = dbHandler.getCredits();
                     show_table_credits(credits_all);
+                } else if (show_transactions_tab.isSelected()) {
+                    ResultSet transactions_all = dbHandler.getTransactions();
+                    show_table_transactions(transactions_all);
                 }
             } catch (SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -147,6 +178,12 @@ public class IndexTestController {
                     client.setFirst_name(search_field.getText());
                     ResultSet credit_search = dbHandler.getCreditSearch(client);
                     show_table_credits(credit_search);
+                } else if (show_transactions_tab.isSelected()) {
+
+                    Transaction transaction = new Transaction();
+                    transaction.setReceiver(search_field.getText());
+                    ResultSet transaction_search = dbHandler.getTransactionSearch(transaction);
+                    show_table_transactions(transaction_search);
                 }
             } catch (SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -186,6 +223,11 @@ public class IndexTestController {
         });
 
 
+        // ------ Настойка кнопки make transaction ------- //
+        make_transaction_button.setOnAction(actionEvent -> {
+            load_window("transaction-make-view.fxml");
+            make_transaction_button.getScene().getWindow().hide();
+        });
 
     }
 
@@ -231,6 +273,35 @@ public class IndexTestController {
         debtor_column.setCellValueFactory(new PropertyValueFactory<Credit, String>("debtor"));
 
         credits_table.setItems(credits_list); // ОТОБРАЖЕНИЕ ТАБЛИЦЫ КРЕДИТОВ
+    }
+
+
+    private void show_table_transactions(ResultSet transactions) throws SQLException {
+
+        transactions_list.clear(); // ОЧИСТКА СПИСКА ТРАНЗАКЦИЙ
+
+        while (transactions.next()) {
+
+            String country = transactions.getString(2);
+            String city = transactions.getString(3);
+            String amount = transactions.getString(4);
+            String currency = transactions.getString(5);
+            String sender = transactions.getString(6);
+            String receiver = transactions.getString(7);
+            String code = transactions.getString(8);
+
+            transactions_list.add(new Transaction(country, city, amount, currency, sender, receiver, code));
+        }
+
+        transaction_country_column.setCellValueFactory(new PropertyValueFactory<Transaction, String>("country"));
+        transaction_city_column.setCellValueFactory(new PropertyValueFactory<Transaction, String>("city"));
+        transaction_amount_column.setCellValueFactory(new PropertyValueFactory<Transaction, Float>("amount"));
+        transaction_currency_column.setCellValueFactory(new PropertyValueFactory<Transaction, String>("currency"));
+        transaction_sender_column.setCellValueFactory(new PropertyValueFactory<Transaction, String>("sender"));
+        transaction_receiver_column.setCellValueFactory(new PropertyValueFactory<Transaction, String>("receiver"));
+        transaction_code_column.setCellValueFactory(new PropertyValueFactory<Transaction, String>("code"));
+
+        transaction_table.setItems(transactions_list); // ОТОБРАЖЕНИЕ ТАБЛИЦЫ ТРАНЗАКЦИЙ
     }
 
     private Optional<ButtonType> select_currency_alert() {

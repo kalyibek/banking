@@ -1,5 +1,7 @@
 package com.example.kursach;
 
+import java.util.Stack;
+
 public class Const {
 
     public static final String WORKER_TABLE = "workers";
@@ -27,5 +29,16 @@ public class Const {
     public static final String CREDITS_CURRENCY = "currency";
     public static final String CREDITS_DATE = "credit_date";
     public static final String CREDITS_CLIENT_ID = "client_id";
+
+    public static final String TRANSACTION_TABLE = "transactions";
+
+    public static final String TRANSACTION_ID = "idtransactions";
+    public static final String TRANSACTION_COUNTRY = "country";
+    public static final String TRANSACTION_CITY = "city";
+    public static final String TRANSACTION_AMOUNT = "sum";
+    public static final String TRANSACTION_CURRENCY = "currency";
+    public static final String TRANSACTION_SENDER = "sender";
+    public static final String TRANSACTION_RECEIVER = "receiver";
+    public static final String TRANSACTION_CODE = "code";
 
 }

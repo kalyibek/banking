@@ -174,4 +174,70 @@ public class DataBaseHandler extends Configs {
 
         return resSet;
     }
+
+
+    public void insertTransaction(Transaction transaction) {
+
+        String insert = "INSERT INTO " + Const.TRANSACTION_TABLE + "(" + Const.TRANSACTION_COUNTRY + "," +
+                Const.TRANSACTION_CITY + "," + Const.TRANSACTION_AMOUNT + "," + Const.TRANSACTION_CURRENCY + "," +
+                Const.TRANSACTION_SENDER + "," + Const.TRANSACTION_RECEIVER + "," + Const.TRANSACTION_CODE +
+                ") VALUES(?,?,?,?,?,?,?)";
+
+        try {
+
+            float amount_including_commission = transaction.getAmount();
+            if (transaction.getCountry().equalsIgnoreCase("kyrgyzstan")) {
+                amount_including_commission -= transaction.getAmount() / 100 * 1.5;
+            } else {
+                amount_including_commission -= transaction.getAmount() / 100 * 5;
+            }
+
+            PreparedStatement prSt = getDbConnection().prepareStatement(insert);
+            prSt.setString(1, transaction.getCountry());
+            prSt.setString(2, transaction.getCity());
+            prSt.setFloat(3, amount_including_commission);
+            prSt.setString(4, transaction.getCurrency());
+            prSt.setString(5, transaction.getSender());
+            prSt.setString(6, transaction.getReceiver());
+            prSt.setString(7,transaction.getCode());
+
+            prSt.executeUpdate();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public ResultSet getTransactions() {
+
+        ResultSet resSet = null;
+        String select = "SELECT * FROM " + Const.TRANSACTION_TABLE;
+
+        try {
+            PreparedStatement prSt = getDbConnection().prepareStatement(select);
+            resSet = prSt.executeQuery();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return resSet;
+    }
+
+    public ResultSet getTransactionSearch(Transaction transaction) {
+
+        ResultSet resSet = null;
+        String select = "SELECT * FROM " + Const.TRANSACTION_TABLE + " WHERE " + Const.TRANSACTION_RECEIVER + " LIKE ?";
+
+        try {
+            String search_str = "%" + transaction.getReceiver() + "%";
+            PreparedStatement prSt = getDbConnection().prepareStatement(select);
+            prSt.setString(1, search_str);
+
+            resSet = prSt.executeQuery();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return resSet;
+    }
+
 }
