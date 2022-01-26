@@ -1,5 +1,9 @@
 package com.example.kursach;
 
+import com.example.kursach.classes.Client;
+import com.example.kursach.classes.Transaction;
+import com.example.kursach.classes.Worker;
+
 import java.sql.*;
 
 public class DataBaseHandler extends Configs {
@@ -181,25 +185,19 @@ public class DataBaseHandler extends Configs {
         String insert = "INSERT INTO " + Const.TRANSACTION_TABLE + "(" + Const.TRANSACTION_COUNTRY + "," +
                 Const.TRANSACTION_CITY + "," + Const.TRANSACTION_AMOUNT + "," + Const.TRANSACTION_CURRENCY + "," +
                 Const.TRANSACTION_SENDER + "," + Const.TRANSACTION_RECEIVER + "," + Const.TRANSACTION_CODE +
-                ") VALUES(?,?,?,?,?,?,?)";
+                "," + Const.TRANSACTION_DATE + ") VALUES(?,?,?,?,?,?,?,?)";
 
         try {
-
-            float amount_including_commission = transaction.getAmount();
-            if (transaction.getCountry().equalsIgnoreCase("kyrgyzstan")) {
-                amount_including_commission -= transaction.getAmount() / 100 * 1.5;
-            } else {
-                amount_including_commission -= transaction.getAmount() / 100 * 5;
-            }
 
             PreparedStatement prSt = getDbConnection().prepareStatement(insert);
             prSt.setString(1, transaction.getCountry());
             prSt.setString(2, transaction.getCity());
-            prSt.setFloat(3, amount_including_commission);
+            prSt.setFloat(3, transaction.getAmount());
             prSt.setString(4, transaction.getCurrency());
             prSt.setString(5, transaction.getSender());
             prSt.setString(6, transaction.getReceiver());
             prSt.setString(7,transaction.getCode());
+            prSt.setDate(8, transaction.getDate());
 
             prSt.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
@@ -232,6 +230,84 @@ public class DataBaseHandler extends Configs {
             PreparedStatement prSt = getDbConnection().prepareStatement(select);
             prSt.setString(1, search_str);
 
+            resSet = prSt.executeQuery();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return resSet;
+    }
+
+    public float getTransactionSumByMonth(int month) {
+
+        ResultSet resultSet;
+        float result = 0;
+        String select = "SELECT SUM(" + Const.TRANSACTION_AMOUNT + ") FROM " + Const.TRANSACTION_TABLE +
+                " WHERE MONTH(" + Const.TRANSACTION_DATE + ")=? AND YEAR(" + Const.TRANSACTION_DATE + ")=" +
+                "YEAR(CURDATE())";
+
+        try {
+            PreparedStatement prSt = getDbConnection().prepareStatement(select);
+            prSt.setInt(1, month);
+
+            resultSet = prSt.executeQuery();
+            while (resultSet.next()) {
+                result = resultSet.getFloat(1);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    public float getTransactionSumByQuarter(int quarter) {
+
+        ResultSet resultSet;
+        float result = 0;
+        String select = "SELECT SUM(" + Const.TRANSACTION_AMOUNT + ") FROM " + Const.TRANSACTION_TABLE +
+                " WHERE QUARTER(" + Const.TRANSACTION_DATE + ")=? AND YEAR(" + Const.TRANSACTION_DATE + ")=" +
+                "YEAR(CURDATE())";
+
+        try {
+            PreparedStatement prSt = getDbConnection().prepareStatement(select);
+            prSt.setInt(1, quarter);
+
+            resultSet = prSt.executeQuery();
+            while (resultSet.next()) {
+                result = resultSet.getFloat(1);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
+    public ResultSet getTransactionsSumByCountry() {
+
+        ResultSet resSet = null;
+        String select = "SELECT " + Const.TRANSACTION_COUNTRY + "," + "SUM(" + Const.TRANSACTION_AMOUNT +
+                ") FROM " + Const.TRANSACTION_TABLE + " GROUP BY(" + Const.TRANSACTION_COUNTRY + ")";
+
+        try {
+            PreparedStatement prSt = getDbConnection().prepareStatement(select);
+            resSet = prSt.executeQuery();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return resSet;
+    }
+
+    public ResultSet getTransactionsSumsByCity() {
+
+        ResultSet resSet = null;
+        String select = "SELECT " + Const.TRANSACTION_CITY + "," + "SUM(" + Const.TRANSACTION_AMOUNT +
+                ") FROM " + Const.TRANSACTION_TABLE + " GROUP BY(" + Const.TRANSACTION_CITY + ")";
+
+        try {
+            PreparedStatement prSt = getDbConnection().prepareStatement(select);
             resSet = prSt.executeQuery();
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();

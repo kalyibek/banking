@@ -1,4 +1,4 @@
-package com.example.kursach;
+package com.example.kursach.classes;
 
 public class Worker {
 
@@ -7,14 +7,14 @@ public class Worker {
     private String user_name;
     private String password;
 
-    Worker(String first_name, String last_name, String user_name, String password) {
+    public Worker(String first_name, String last_name, String user_name, String password) {
         this.first_name = first_name;
         this.last_name = last_name;
         this.user_name = user_name;
         this.password = password;
     }
 
-    Worker() {}
+    public Worker() {}
 
     public String getFirst_name() {
         return first_name;

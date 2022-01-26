@@ -2,9 +2,11 @@ package com.example.kursach;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Date;
 import java.util.ResourceBundle;
 
-import com.mysql.cj.util.DnsSrv;
+import com.example.kursach.classes.PasswordGenerator;
+import com.example.kursach.classes.Transaction;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -65,6 +67,7 @@ public class TransactionController {
         // ------ Настройка кнопки submit ------- //
         submit_transaction_button.setOnAction(actionEvent -> {
 
+            //Объект для дальнейшего создания рандомного пароля
             PasswordGenerator passwordGenerator = new PasswordGenerator.PasswordGeneratorBuilder()
                     .useDigits(true)
                     .useLower(true)
@@ -80,6 +83,7 @@ public class TransactionController {
             String sender_text = sender_field.getText();
             String receiver_text = receiver_field.getText();
             String code_text = passwordGenerator.generate(8);
+            Date transaction_date = new Date(System.currentTimeMillis());
 
             boolean isAllFilled = !(country_text.equals("") && city_text.equals("") &&
                     amount_text.equals("") && currency_text.equals("") && sender_text.equals("") &&
@@ -87,8 +91,11 @@ public class TransactionController {
                     (kgs_radio.isSelected() || usd_radio.isSelected());
 
             if (isAllFilled) {
-                Transaction transaction = new Transaction(country_text, city_text, amount_text, currency_text,
-                                                          sender_text, receiver_text, code_text);
+
+                float amount_including_commission = checkCountry(country_text, amount_text);
+                Transaction transaction = new Transaction(country_text, city_text, amount_including_commission,
+                                                          currency_text, sender_text, receiver_text, code_text,
+                                                          transaction_date);
                 dbHandler.insertTransaction(transaction);
                 showAlert("Успешно", "Транзакция выполнена.");
                 load_window("index_test.fxml");
@@ -97,6 +104,24 @@ public class TransactionController {
                 showAlert("Ошибка.", "Пожалуйста, заполните поля.");
             }
         });
+    }
+
+    private float checkCountry(String  country, String amount_text) {
+
+        float amount_including_commission;
+
+        if (amount_text.equals("")) {
+            amount_including_commission = 0;
+        } else {
+            amount_including_commission = Float.parseFloat(amount_text);
+            if (country.equalsIgnoreCase("kyrgyzstan")) {
+                amount_including_commission -= amount_including_commission / 100 * 1.5;
+            } else {
+                amount_including_commission -= amount_including_commission / 100 * 5;
+            }
+        }
+
+        return amount_including_commission;
     }
 
     private void showAlert(String title, String content) {

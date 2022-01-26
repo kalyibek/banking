@@ -40,5 +40,6 @@ public class Const {
     public static final String TRANSACTION_SENDER = "sender";
     public static final String TRANSACTION_RECEIVER = "receiver";
     public static final String TRANSACTION_CODE = "code";
+    public static final String TRANSACTION_DATE = "date";
 
 }

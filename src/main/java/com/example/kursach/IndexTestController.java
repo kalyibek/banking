@@ -4,10 +4,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
+import java.sql.Date;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import com.example.kursach.classes.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -96,6 +97,45 @@ public class IndexTestController {
     private TableColumn<Transaction, String> transaction_sender_column;
 
     @FXML
+    private TableColumn<Transaction, Date> transaction_date_column;
+
+    @FXML
+    private TableView<MonthAndTransactionSum> each_month_transactions_sum_table;
+
+    @FXML
+    private TableColumn<MonthAndTransactionSum, String> month_column;
+
+    @FXML
+    private TableColumn<MonthAndTransactionSum, Float> sum_by_month_column;
+
+    @FXML
+    private TableView<QuarterAndTransactionSum> each_quarter_transactions_sum_table;
+
+    @FXML
+    private TableColumn<QuarterAndTransactionSum, Integer> quarter_column;
+
+    @FXML
+    private TableColumn<QuarterAndTransactionSum, Float> sum_by_quarter_column;
+
+    @FXML
+    private TableView<CountryAndTransactionSum> each_country_transactions_sum_table;
+
+    @FXML
+    private TableColumn<CountryAndTransactionSum, String> country_column;
+
+    @FXML
+    private TableColumn<CountryAndTransactionSum, Float> sum_by_country_column;
+
+    @FXML
+    private TableView<CityAndTransactionSum> each_city_transactions_sum_table;
+
+    @FXML
+    private TableColumn<CityAndTransactionSum, String> city_column;
+
+    @FXML
+    private TableColumn<CityAndTransactionSum, Float> sum_by_city_column;
+
+    @FXML
     private Button refresh_button;
 
     @FXML
@@ -113,14 +153,21 @@ public class IndexTestController {
     @FXML
     private Button make_transaction_button;
 
+    @FXML
+    private Button transactions_statistic_button;
+
     ObservableList<Client> clients_list = FXCollections.observableArrayList();
     ObservableList<Credit> credits_list = FXCollections.observableArrayList();
     ObservableList<Transaction> transactions_list = FXCollections.observableArrayList();
+    ObservableList<MonthAndTransactionSum> month_and_transaction_sum_list = FXCollections.observableArrayList();
+    ObservableList<QuarterAndTransactionSum> quarter_and_transaction_sum_list = FXCollections.observableArrayList();
+    ObservableList<CountryAndTransactionSum> country_and_transaction_sum_list = FXCollections.observableArrayList();
+    ObservableList<CityAndTransactionSum> city_and_transaction_sum_list = FXCollections.observableArrayList();
+
+    DataBaseHandler dbHandler = new DataBaseHandler();
 
     @FXML
     void initialize() throws SQLException, ClassNotFoundException {
-
-        DataBaseHandler dbHandler = new DataBaseHandler();
 
         // ------ Вывод таблицы всех клиентов ------- //
         ResultSet clients_all_main = dbHandler.getClient();
@@ -133,6 +180,11 @@ public class IndexTestController {
 
 
         // ------ Вывод таблицы транзакций ------- //
+        each_month_transactions_sum_table.setVisible(false);
+        each_quarter_transactions_sum_table.setVisible(false);
+        each_country_transactions_sum_table.setVisible(false);
+        each_city_transactions_sum_table.setVisible(false);
+        transaction_table.setVisible(true);
         ResultSet transactions_all_main = dbHandler.getTransactions();
         show_table_transactions(transactions_all_main);
 
@@ -148,14 +200,11 @@ public class IndexTestController {
         refresh_button.setOnAction(actionEvent -> {
             try {
                 if (show_clients_tab.isSelected()) {
-                    ResultSet clients_all = dbHandler.getClient();
-                    show_table_clients(clients_all);
+                    clients_refresh();
                 } else if (show_credits_tab.isSelected()) {
-                    ResultSet credits_all = dbHandler.getCredits();
-                    show_table_credits(credits_all);
+                    credits_refresh();
                 } else if (show_transactions_tab.isSelected()) {
-                    ResultSet transactions_all = dbHandler.getTransactions();
-                    show_table_transactions(transactions_all);
+                    transactions_refresh();
                 }
             } catch (SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -229,6 +278,11 @@ public class IndexTestController {
             make_transaction_button.getScene().getWindow().hide();
         });
 
+
+        // ------ Настойка кнопки показа статистики ------- //
+        transactions_statistic_button.setOnAction(actionEvent -> {
+            show_sum_statistics_tables();
+        });
     }
 
     private void show_table_clients(ResultSet clients) throws SQLException {
@@ -284,13 +338,14 @@ public class IndexTestController {
 
             String country = transactions.getString(2);
             String city = transactions.getString(3);
-            String amount = transactions.getString(4);
+            float amount = transactions.getFloat(4);
             String currency = transactions.getString(5);
             String sender = transactions.getString(6);
             String receiver = transactions.getString(7);
             String code = transactions.getString(8);
+            Date transaction_date = transactions.getDate(9);
 
-            transactions_list.add(new Transaction(country, city, amount, currency, sender, receiver, code));
+            transactions_list.add(new Transaction(country, city, amount, currency, sender, receiver, code, transaction_date));
         }
 
         transaction_country_column.setCellValueFactory(new PropertyValueFactory<Transaction, String>("country"));
@@ -300,8 +355,127 @@ public class IndexTestController {
         transaction_sender_column.setCellValueFactory(new PropertyValueFactory<Transaction, String>("sender"));
         transaction_receiver_column.setCellValueFactory(new PropertyValueFactory<Transaction, String>("receiver"));
         transaction_code_column.setCellValueFactory(new PropertyValueFactory<Transaction, String>("code"));
+        transaction_date_column.setCellValueFactory(new PropertyValueFactory<Transaction, Date>("date"));
 
         transaction_table.setItems(transactions_list); // ОТОБРАЖЕНИЕ ТАБЛИЦЫ ТРАНЗАКЦИЙ
+    }
+
+
+    private void show_table_each_month_transactions() {
+
+        month_and_transaction_sum_list.clear(); // ОЧИСТКА СПИСКА ТРАНЗАКЦИЙ ЗА КАЖДЫЙ МЕСЯЦ
+
+        for (int month = 1; month <= 12; month++) {
+            float result = dbHandler.getTransactionSumByMonth(month);
+            month_and_transaction_sum_list.add(new MonthAndTransactionSum(month, result));
+        }
+
+        month_column.setCellValueFactory(new PropertyValueFactory<MonthAndTransactionSum, String>("month"));
+        sum_by_month_column.setCellValueFactory(new PropertyValueFactory<MonthAndTransactionSum, Float>("sum"));
+
+        each_month_transactions_sum_table.setItems(month_and_transaction_sum_list); // ОТОБРАЖЕНИЕ ТАБЛИЦЫ ТРАНЗАКЦИЙ ЗА КАЖДЫЙ МЕСЯЦ
+    }
+
+
+    private void show_table_each_quarter_transactions() {
+
+        quarter_and_transaction_sum_list.clear(); // ОЧИСТКА СПИСКА ТРАНЗАКЦИЙ ЗА КАЖДЫЙ КВАРТАЛ
+
+        for (int quarter = 1; quarter <= 4; quarter++) {
+            float result = dbHandler.getTransactionSumByQuarter(quarter);
+            quarter_and_transaction_sum_list.add(new QuarterAndTransactionSum(quarter, result));
+        }
+
+       quarter_column.setCellValueFactory(new PropertyValueFactory<QuarterAndTransactionSum, Integer>("quarter"));
+       sum_by_quarter_column.setCellValueFactory(new PropertyValueFactory<QuarterAndTransactionSum, Float>("sum"));
+
+       each_quarter_transactions_sum_table.setItems(quarter_and_transaction_sum_list); // ОТОБРАЖЕНИЕ ТАБЛИЦЫ ТРАНЗАКЦИЙ ЗА КАЖДЫЙ КВАРТАЛ
+    }
+
+
+    private void show_table_each_country_transactions(ResultSet sums_by_country) throws SQLException {
+
+        country_and_transaction_sum_list.clear();
+
+        while (sums_by_country.next()) {
+            String country = sums_by_country.getString(1);
+            float sum = sums_by_country.getFloat(2);
+
+            country_and_transaction_sum_list.add(new CountryAndTransactionSum(country, sum));
+        }
+
+        country_column.setCellValueFactory(new PropertyValueFactory<CountryAndTransactionSum, String>("country"));
+        sum_by_country_column.setCellValueFactory(new PropertyValueFactory<CountryAndTransactionSum, Float>("sum"));
+
+        each_country_transactions_sum_table.setItems(country_and_transaction_sum_list);
+    }
+
+
+    private void show_table_each_city_transactions(ResultSet sums_by_city) throws SQLException {
+
+        city_and_transaction_sum_list.clear();
+
+        while (sums_by_city.next()) {
+            String city = sums_by_city.getString(1);
+            float sum = sums_by_city.getFloat(2);
+
+            city_and_transaction_sum_list.add(new CityAndTransactionSum(city, sum));
+        }
+
+        city_column.setCellValueFactory(new PropertyValueFactory<CityAndTransactionSum, String>("city"));
+        sum_by_city_column.setCellValueFactory(new PropertyValueFactory<CityAndTransactionSum, Float>("sum"));
+
+        each_city_transactions_sum_table.setItems(city_and_transaction_sum_list);
+    }
+
+
+    private void show_sum_statistics_tables() {
+
+        transaction_table.setVisible(false);
+        each_month_transactions_sum_table.setVisible(true);
+        show_table_each_month_transactions();
+        each_quarter_transactions_sum_table.setVisible(true);
+        show_table_each_quarter_transactions();
+
+        each_country_transactions_sum_table.setVisible(true);
+        ResultSet sums_by_country = dbHandler.getTransactionsSumByCountry();
+        try {
+            show_table_each_country_transactions(sums_by_country);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        each_city_transactions_sum_table.setVisible(true);
+        ResultSet sums_by_city = dbHandler.getTransactionsSumsByCity();
+        try {
+            show_table_each_city_transactions(sums_by_city);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void clients_refresh() throws SQLException {
+
+        ResultSet clients_all = dbHandler.getClient();
+        show_table_clients(clients_all);
+    }
+
+    private void credits_refresh() throws SQLException, ClassNotFoundException {
+
+        ResultSet credits_all = dbHandler.getCredits();
+        show_table_credits(credits_all);
+    }
+
+    private void transactions_refresh() throws SQLException {
+
+        ResultSet transactions_all = dbHandler.getTransactions();
+        show_table_transactions(transactions_all);
+        transaction_table.setVisible(true);
+        each_month_transactions_sum_table.setVisible(false);
+        each_quarter_transactions_sum_table.setVisible(false);
+        each_country_transactions_sum_table.setVisible(false);
+        each_city_transactions_sum_table.setVisible(false);
     }
 
     private Optional<ButtonType> select_currency_alert() {

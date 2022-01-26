@@ -1,4 +1,4 @@
-package com.example.kursach;
+package com.example.kursach.classes;
 
 public class Client {
 
@@ -9,8 +9,8 @@ public class Client {
     private float money_som;
     private float money_dollar;
 
-    Client (String first_name, String last_name, String user_name,
-            String password, String money_som, String money_dollar) {
+    public Client(String first_name, String last_name, String user_name,
+                  String password, String money_som, String money_dollar) {
 
         this.first_name = first_name;
         this.last_name = last_name;
@@ -28,7 +28,7 @@ public class Client {
         }
     }
 
-    Client() {}
+    public Client() {}
 
     public String getFirst_name() {
         return first_name;

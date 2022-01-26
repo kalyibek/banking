@@ -1,4 +1,6 @@
-package com.example.kursach;
+package com.example.kursach.classes;
+
+import java.sql.Date;
 
 public class Transaction {
 
@@ -9,20 +11,18 @@ public class Transaction {
     private String sender;
     private String receiver;
     private String code;
+    private Date date;
 
-    public Transaction(String country, String city, String amount, String currency, String sender, String receiver, String code) {
+    public Transaction(String country, String city, float amount, String currency, String sender, String receiver, String code, Date date) {
 
         this.country = country;
         this.city = city;
-        if (!amount.equals("")) {
-            this.amount = Float.parseFloat(amount);
-        } else {
-            this.amount = 0;
-        }
+        this.amount = amount;
         this.currency = currency;
         this.sender = sender;
         this.receiver = receiver;
         this.code = code;
+        this.date = date;
     }
 
     public Transaction() {}
@@ -81,5 +81,13 @@ public class Transaction {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 }

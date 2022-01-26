@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="469.0" prefWidth="844.0" style="-fx-background-color: #2E3348;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.kursach.IndexController">
+   <children>
+      <Label layoutX="281.0" prefHeight="64.0" prefWidth="250.0" text="Banking online!" textFill="#fcf6f6">
+         <font>
+            <Font name="Harlow Solid Italic" size="37.0" />
+         </font>
+      </Label>
+      <TableView fx:id="each_country_city_sum_table" layoutY="72.0" prefHeight="353.0" prefWidth="250.0">
+         <columns>
+            <TableColumn fx:id="city_column" prefWidth="137.0" text="City" />
+            <TableColumn fx:id="sum_by_city_column" prefWidth="112.0" text="Sum" />
+         </columns>
+      </TableView>
+   </children>
+</AnchorPane>
