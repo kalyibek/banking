@@ -96,6 +96,87 @@ public class DataBaseHandler extends Configs {
         return resSet;
     }
 
+
+    public ResultSet getClientsNames() {
+
+        ResultSet resSet = null;
+        String select = "SELECT CONCAT(" + Const.CLIENTS_FIRSTNAME + ", ' ', " + Const.CLIENTS_LASTNAME
+                + ") FROM " + Const.CLIENT_TABLE;
+
+        try {
+            PreparedStatement prSt = getDbConnection().prepareStatement(select);
+            resSet = prSt.executeQuery();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return resSet;
+    }
+
+
+    public Client getClientByUserName(String user_name) {
+
+        ResultSet resSet = null;
+        Client result_client = new Client();
+
+        String select = "SELECT * FROM " + Const.CLIENT_TABLE + " WHERE " +
+                Const.CLIENTS_USERNAME + "=?";
+
+        try {
+            PreparedStatement prSt = getDbConnection().prepareStatement(select);
+            prSt.setString(1, user_name);
+
+            resSet = prSt.executeQuery();
+            while (resSet.next()) {
+                String first_name = resSet.getString(2);
+                String last_name = resSet.getString(3);
+                String u_name = resSet.getString(4);
+                String password = resSet.getString(5);
+                float money_som = resSet.getFloat(6);
+                float money_dollar = resSet.getFloat(7);
+
+                result_client = new Client(first_name, last_name, u_name, password, money_som, money_dollar);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return result_client;
+    }
+
+
+    public Client getClientLogin(Client client) {
+
+        ResultSet resSet = null;
+        Client result_client = new Client();
+
+        String select = "SELECT * FROM " + Const.CLIENT_TABLE + " WHERE " +
+                Const.CLIENTS_USERNAME + "=? AND " + Const.CLIENTS_PASSWORD + "=?";
+
+        try {
+            PreparedStatement prSt = getDbConnection().prepareStatement(select);
+            prSt.setString(1, client.getUser_name());
+            prSt.setString(2, client.getPassword());
+
+            resSet = prSt.executeQuery();
+            while (resSet.next()) {
+                String first_name = resSet.getString(2);
+                String last_name = resSet.getString(3);
+                String user_name = resSet.getString(4);
+                String password = resSet.getString(5);
+                float money_som = resSet.getFloat(6);
+                float money_dollar = resSet.getFloat(7);
+
+                result_client = new Client(first_name, last_name, user_name, password, money_som, money_dollar);
+            }
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return result_client;
+    }
+
+
     public ResultSet getClientSearch(Client client) {
 
         ResultSet resSet = null;
@@ -126,6 +207,24 @@ public class DataBaseHandler extends Configs {
 
         return resSet;
     }
+
+
+    public ResultSet getCreditByDebtor(Client client) throws SQLException, ClassNotFoundException {
+
+        ResultSet resultSet;
+
+        String select = "SELECT " + Const.CREDITS_AMOUNT + "," +  Const.CREDITS_CURRENCY + "," + Const.CREDITS_DATE +
+                "," + " CONCAT(" + Const.CLIENTS_FIRSTNAME + ", ' '," + Const.CLIENTS_LASTNAME + ") AS debtor FROM " +
+                Const.CLIENT_TABLE + " INNER JOIN " + Const.CREDIT_TABLE + " ON " + Const.CLIENTS_ID + "=" + Const.CREDITS_CLIENT_ID +
+                " WHERE " + Const.CLIENTS_USERNAME + "=?";
+
+        PreparedStatement prSt = getDbConnection().prepareStatement(select);
+        prSt.setString(1, client.getUser_name());
+        resultSet = prSt.executeQuery();
+
+        return resultSet;
+    }
+
 
     public ResultSet getCreditSearch(Client client) throws SQLException, ClassNotFoundException {
 
@@ -314,6 +413,42 @@ public class DataBaseHandler extends Configs {
         }
 
         return resSet;
+    }
+
+
+    public void updateClientsCheck(Client this_client, String name, float sum, String currency) {
+
+        String money;
+        if (currency.equals("KGS")) {
+            money = Const.CLIENTS_MONEYSOM;
+            this_client.setMoney_som(this_client.getMoney_som() - sum);
+        } else {
+            money = Const.CLIENTS_MONEYDOLLAR;
+            this_client.setMoney_dollar(this_client.getMoney_dollar() - sum);
+        }
+
+        String update_sender = "UPDATE " + Const.CLIENT_TABLE + " SET " + money + "=" + money + "-?" +
+                " WHERE " + Const.CLIENTS_USERNAME + "=?";
+
+
+        String update_receiver = "UPDATE " + Const.CLIENT_TABLE + " SET " + money + "=" + money + "+?" +
+                " WHERE " + "CONCAT(" + Const.CLIENTS_FIRSTNAME + ", ' ', " + Const.CLIENTS_LASTNAME + ")=?";
+
+        try {
+            PreparedStatement prSt = getDbConnection().prepareStatement(update_sender);
+            prSt.setFloat(1, sum);
+            prSt.setString(2, this_client.getUser_name());
+
+            prSt.executeUpdate();
+
+            PreparedStatement prSt1 = getDbConnection().prepareStatement(update_receiver);
+            prSt1.setFloat(1, sum);
+            prSt1.setString(2, name);
+
+            prSt1.executeUpdate();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 }

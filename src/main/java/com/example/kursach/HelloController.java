@@ -1,5 +1,6 @@
 package com.example.kursach;
 
+import com.example.kursach.classes.Client;
 import com.example.kursach.classes.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -44,6 +45,7 @@ public class HelloController {
 
     @FXML
     private ImageView background_image;
+
 
     @FXML
     void initialize() {
@@ -121,7 +123,25 @@ public class HelloController {
 
     private void login_client(String login_text, String password_text) {
 
-        // continue method!!!
+        DataBaseHandler dbHandler = new DataBaseHandler();
+        Client client = new Client();
+        client.setUser_name(login_text);
+        client.setPassword(password_text);
+        Client client_result = dbHandler.getClientLogin(client);
+
+        System.out.println("login uaaa:" + client_result.getFirst_name() + "\n");
+
+        if (client_result.getUser_name() != null) {
+            load_client_window("index-client-view.fxml", client_result);
+        } else {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            load_window("hello-view.fxml");
+            alert.setTitle("Ошибка");
+            alert.setHeaderText(null);
+            alert.setContentText("Неверный логин или пароль, пожалуйста попробуйте еще.");
+            alert.showAndWait();
+        }
+
     }
 
     private void load_window(String url) {
@@ -139,4 +159,31 @@ public class HelloController {
         stage.setScene(new Scene(root));
         stage.show();
     }
+
+
+    private void load_client_window(String url, Client client) {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(HelloController.class.getResource(url));
+
+        try {
+            loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        IndexClientController controller = loader.getController();
+        try {
+            controller.initData(client);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        Parent root = loader.getRoot();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
+
 }

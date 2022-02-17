@@ -293,8 +293,8 @@ public class IndexTestController {
 
             String first_name = clients.getString(2);
             String last_name = clients.getString(3);
-            String money_som = clients.getString(6);
-            String money_dollar = clients.getString(7);
+            float money_som = clients.getFloat(6);
+            float money_dollar = clients.getFloat(7);
 
             clients_list.add(new Client(first_name, last_name, null, null, money_som, money_dollar));
         }

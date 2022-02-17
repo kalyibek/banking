@@ -102,7 +102,14 @@ public class RegistrationController {
                         money_dollar = result_dollar.get();
                     }
 
-                    Client client = new Client(first_name_text, last_name_text, login_text, password_text, money_som, money_dollar);
+                    Client client = new Client(
+                            first_name_text,
+                            last_name_text,
+                            login_text,
+                            password_text,
+                            Float.parseFloat(money_som),
+                            Float.parseFloat(money_dollar)
+                    );
 
                     dbHandler.registrate_client(client);
                 }
