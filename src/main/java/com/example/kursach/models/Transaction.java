@@ -1,4 +1,4 @@
-package com.example.kursach.classes;
+package com.example.kursach.models;
 
 import java.sql.Date;
 

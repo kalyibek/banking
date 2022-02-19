@@ -42,4 +42,14 @@ public class Const {
     public static final String TRANSACTION_CODE = "code";
     public static final String TRANSACTION_DATE = "date";
 
+    public static final String CREDIT_REQUEST_TABLE = "credit_requests";
+
+    public static final String REQUEST_ID = "idrequest";
+    public static final String REQUEST_SUM = "sum";
+    public static final String REQUEST_TRUSTED_PERSON = "trusted_person";
+    public static final String REQUEST_ADDRESS = "address";
+    public static final String REQUEST_CITY = "city";
+    public static final String REQUEST_CURRENCY = "currency";
+    public static final String REQUEST_CREDITOR_ID = "creditor_username";
+
 }

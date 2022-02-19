@@ -1,8 +1,9 @@
 package com.example.kursach;
 
-import com.example.kursach.classes.Client;
-import com.example.kursach.classes.Transaction;
-import com.example.kursach.classes.Worker;
+import com.example.kursach.models.Client;
+import com.example.kursach.models.RequestForCredit;
+import com.example.kursach.models.Transaction;
+import com.example.kursach.models.Worker;
 
 import java.sql.*;
 
@@ -193,6 +194,60 @@ public class DataBaseHandler extends Configs {
 
         return resSet;
     }
+
+
+    public void insertCredit(RequestForCredit request) {
+
+        ResultSet user_names = null;
+
+        String insert = "INSERT INTO " + Const.CREDIT_TABLE + "(" +
+                Const.CREDITS_AMOUNT + "," +
+                Const.CREDITS_CURRENCY + "," +
+                Const.CREDITS_DATE + "," +
+                Const.CREDITS_CLIENT_ID +
+                ") VALUES (?,?,?,?)";
+
+        System.out.println(insert);
+
+        String client_id_request = "SELECT " + Const.CLIENTS_ID + " FROM " + Const.CLIENT_TABLE +
+                " WHERE " + Const.CLIENTS_USERNAME + "=?";
+
+        try {
+            PreparedStatement sub_query = getDbConnection().prepareStatement(client_id_request);
+            sub_query.setString(1, request.getCreditor_user_name());
+            user_names = sub_query.executeQuery();
+            String user_name = null;
+            while (user_names.next()) {
+                user_name = user_names.getString(1);
+            }
+
+            PreparedStatement prSt = getDbConnection().prepareStatement(insert);
+            prSt.setFloat(1, request.getSum());
+            prSt.setString(2, request.getCurrency());
+            prSt.setDate(3, new Date(System.currentTimeMillis()));
+            prSt.setString(4, user_name);
+
+            prSt.executeUpdate();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void deleteRequest(RequestForCredit request) {
+
+        String insert = "DELETE FROM " + Const.CREDIT_REQUEST_TABLE + " WHERE " + Const.REQUEST_CREDITOR_ID + "=?";
+
+        try {
+
+            PreparedStatement prSt = getDbConnection().prepareStatement(insert);
+            prSt.setString(1, request.getCreditor_user_name());
+
+            prSt.executeUpdate();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public ResultSet getCredits() throws SQLException, ClassNotFoundException {
 
@@ -449,6 +504,62 @@ public class DataBaseHandler extends Configs {
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
+    }
+
+    public void insertRequest(RequestForCredit request) {
+
+        String insert = "INSERT INTO " + Const.CREDIT_REQUEST_TABLE + "(" +
+                Const.REQUEST_SUM + "," +
+                Const.REQUEST_TRUSTED_PERSON + "," +
+                Const.REQUEST_ADDRESS + "," +
+                Const.REQUEST_CITY + "," +
+                Const.REQUEST_CURRENCY + "," +
+                Const.REQUEST_CREDITOR_ID +
+                ") VALUES (?,?,?,?,?,?)";
+
+        try {
+
+            PreparedStatement prSt = getDbConnection().prepareStatement(insert);
+            prSt.setFloat(1, request.getSum());
+            prSt.setString(2, request.getTrusted_person());
+            prSt.setString(3, request.getAddress());
+            prSt.setString(4, request.getCity());
+            prSt.setString(5, request.getCurrency());
+            prSt.setString(6, request.getCreditor_user_name());
+
+            prSt.executeUpdate();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+    public ResultSet selectCreditRequests() {
+
+        ResultSet resSet = null;
+        String select = "SELECT " +
+                Const.REQUEST_SUM + "," +
+                Const.REQUEST_CURRENCY + "," +
+                Const.REQUEST_TRUSTED_PERSON + "," +
+                Const.REQUEST_ADDRESS + "," +
+                Const.REQUEST_CITY + "," +
+                Const.REQUEST_CREDITOR_ID +
+                ", CONCAT(" + Const.CLIENTS_FIRSTNAME + ", ' ', " + Const.CLIENTS_LASTNAME + ")" +
+                " AS name FROM " + Const.CLIENT_TABLE + " INNER JOIN " + Const.CREDIT_REQUEST_TABLE + " ON " +
+                Const.CLIENTS_USERNAME + "=" + Const.REQUEST_CREDITOR_ID;
+
+        System.out.println(select);
+
+        try {
+            PreparedStatement prSt = getDbConnection().prepareStatement(select);
+            resSet = prSt.executeQuery();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return resSet;
+
     }
 
 }

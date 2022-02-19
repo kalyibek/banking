@@ -126,6 +126,26 @@
                            </children></AnchorPane>
                     </content>
                   </Tab>
+                  <Tab fx:id="show_credit_requests_tab" style="-fx-background-color: #2E3348; -fx-text-base-color: #fcf6f6;" text="Credit requests">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TableView fx:id="credit_requests_table" prefHeight="413.0" prefWidth="801.0">
+                                <columns>
+                                  <TableColumn fx:id="request_creditor_column" prefWidth="125.0" text="Creditor" />
+                                  <TableColumn fx:id="request_sum_column" prefWidth="90.0" text="Sum" />
+                                    <TableColumn fx:id="request_currency_column" prefWidth="55.0" text="Currency" />
+                                    <TableColumn fx:id="request_trusted_person_column" prefWidth="157.0" text="Trusted Person" />
+                                    <TableColumn fx:id="request_address_column" prefWidth="122.0" text="Address" />
+                                    <TableColumn fx:id="request_city_column" prefWidth="99.0" text="City" />
+                                    <TableColumn fx:id="accept_button_column" prefWidth="75.0" />
+                                    <TableColumn fx:id="reject_button_column" prefWidth="75.0" />
+                                </columns>
+                              </TableView>
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </Tab>
               </tabs>
             </TabPane>
          </children>

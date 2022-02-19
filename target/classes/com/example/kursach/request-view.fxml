@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #2E3348;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.kursach.RequestForCreditController">
+   <children>
+      <AnchorPane layoutX="1.0" layoutY="83.0" prefHeight="366.0" prefWidth="700.0" style="-fx-background-color: #fafafa;">
+         <children>
+            <ImageView fitHeight="366.0" fitWidth="700.0" opacity="0.75">
+               <image>
+                  <Image url="@Banking-Technology-Vision-Innovation-COVID.jpg" />
+               </image>
+            </ImageView>
+            <TextField fx:id="amount_field" layoutX="29.0" layoutY="73.0" prefHeight="35.0" prefWidth="302.0" promptText="Enter sum" />
+            <TextField fx:id="address_field" layoutX="29.0" layoutY="148.0" prefHeight="35.0" prefWidth="302.0" promptText="Enter address" />
+            <TextField fx:id="trusted_person_field" layoutX="377.0" layoutY="73.0" prefHeight="35.0" prefWidth="302.0" promptText="Enter first name and last name" />
+            <TextField fx:id="city_field" layoutX="377.0" layoutY="148.0" prefHeight="35.0" prefWidth="302.0" promptText="Enter city" />
+            <Button fx:id="submit_request_button" layoutX="266.0" layoutY="285.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="168.0" style="-fx-background-color: #2E3348;" text="Submit" textAlignment="RIGHT" textFill="#fcf6f6">
+               <font>
+                  <Font name="Leelawadee UI Semilight" size="20.0" />
+               </font>
+            </Button>
+            <Button fx:id="back_button" layoutX="29.0" layoutY="285.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="104.0" style="-fx-background-color: #2E3348;" text="Back" textAlignment="RIGHT" textFill="#fcf6f6">
+               <font>
+                  <Font name="Leelawadee UI Semilight" size="20.0" />
+               </font>
+            </Button>
+            <Label layoutX="29.0" layoutY="45.0" prefHeight="17.0" prefWidth="126.0" text="Sum of credit:" textFill="#fcf6f6">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label layoutX="377.0" layoutY="45.0" prefHeight="17.0" prefWidth="126.0" text="Trusted person:" textFill="#fcf6f6">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label layoutX="29.0" layoutY="120.0" prefHeight="17.0" prefWidth="126.0" text="Address:" textFill="#fcf6f6">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label layoutX="377.0" layoutY="120.0" prefHeight="17.0" prefWidth="126.0" text="City:" textFill="#fcf6f6">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label layoutX="284.0" layoutY="229.0" prefHeight="21.0" prefWidth="75.0" text="Currency:" textFill="#fcf6f6">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <RadioButton fx:id="kgs_radio" layoutX="361.0" layoutY="247.0" mnemonicParsing="false" text="KGS" textFill="#fcf6f6">
+               <font>
+                  <Font size="15.0" />
+               </font>
+               <toggleGroup>
+                  <ToggleGroup fx:id="currency" />
+               </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="usd_radio" layoutX="360.0" layoutY="212.0" mnemonicParsing="false" text="USD" textFill="#fcf6f6" toggleGroup="$currency">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </RadioButton>
+         </children>
+      </AnchorPane>
+      <Label layoutX="227.0" prefHeight="78.0" prefWidth="247.0" text="Banking online!" textFill="#fcf6f6">
+         <font>
+            <Font name="Harlow Solid Italic" size="37.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

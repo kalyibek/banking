@@ -9,4 +9,6 @@ module com.example.kursach {
     exports com.example.kursach;
     exports com.example.kursach.classes;
     opens com.example.kursach.classes to javafx.fxml;
+    exports com.example.kursach.models;
+    opens com.example.kursach.models to javafx.fxml;
 }

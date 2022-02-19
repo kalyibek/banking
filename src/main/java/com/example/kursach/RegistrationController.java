@@ -5,8 +5,8 @@ import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import com.example.kursach.classes.Client;
-import com.example.kursach.classes.Worker;
+import com.example.kursach.models.Client;
+import com.example.kursach.models.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

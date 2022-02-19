@@ -1,7 +1,7 @@
 package com.example.kursach;
 
-import com.example.kursach.classes.Client;
-import com.example.kursach.classes.Worker;
+import com.example.kursach.models.Client;
+import com.example.kursach.models.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;

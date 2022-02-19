@@ -9,6 +9,9 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 import com.example.kursach.classes.*;
+import com.example.kursach.models.Client;
+import com.example.kursach.models.RequestForCredit;
+import com.example.kursach.models.Transaction;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -38,6 +41,9 @@ public class IndexTestController {
 
     @FXML
     private Tab show_transactions_tab;
+
+    @FXML
+    private Tab show_credit_requests_tab;
 
     @FXML
     private TableView<Credit> credits_table;
@@ -136,6 +142,33 @@ public class IndexTestController {
     private TableColumn<CityAndTransactionSum, Float> sum_by_city_column;
 
     @FXML
+    private TableView<RequestForCredit> credit_requests_table;
+
+    @FXML
+    private TableColumn<RequestForCredit, String> request_address_column;
+
+    @FXML
+    private TableColumn<RequestForCredit, String> request_city_column;
+
+    @FXML
+    private TableColumn<RequestForCredit, String> request_creditor_column;
+
+    @FXML
+    private TableColumn<RequestForCredit, String> request_currency_column;
+
+    @FXML
+    private TableColumn<RequestForCredit, Float> request_sum_column;
+
+    @FXML
+    private TableColumn<RequestForCredit, String> request_trusted_person_column;
+
+    @FXML
+    private TableColumn<RequestForCredit, Button> accept_button_column;
+
+    @FXML
+    private TableColumn<RequestForCredit, Button> reject_button_column;
+
+    @FXML
     private Button refresh_button;
 
     @FXML
@@ -163,6 +196,7 @@ public class IndexTestController {
     ObservableList<QuarterAndTransactionSum> quarter_and_transaction_sum_list = FXCollections.observableArrayList();
     ObservableList<CountryAndTransactionSum> country_and_transaction_sum_list = FXCollections.observableArrayList();
     ObservableList<CityAndTransactionSum> city_and_transaction_sum_list = FXCollections.observableArrayList();
+    ObservableList<RequestForCredit> credit_requests_list = FXCollections.observableArrayList();
 
     DataBaseHandler dbHandler = new DataBaseHandler();
 
@@ -189,6 +223,11 @@ public class IndexTestController {
         show_table_transactions(transactions_all_main);
 
 
+        // ------ Вывод таблицы запросов на кредит ------- //
+        ResultSet requests = dbHandler.selectCreditRequests();
+        show_table_requests(requests);
+
+
         // ------ Настройка кнопки выхода ------- //
         exit_button.setOnAction(actionEvent -> {
             load_window("hello-view.fxml");
@@ -205,6 +244,8 @@ public class IndexTestController {
                     credits_refresh();
                 } else if (show_transactions_tab.isSelected()) {
                     transactions_refresh();
+                } else if (show_credit_requests_tab.isSelected()) {
+                    requests_refresh();
                 }
             } catch (SQLException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -429,6 +470,68 @@ public class IndexTestController {
     }
 
 
+    private void show_table_requests(ResultSet requests) throws SQLException {
+
+        credit_requests_list.clear();
+
+        while (requests.next()) {
+            float sum = requests.getFloat(1);
+            String currency = requests.getString(2);
+            String trusted_person = requests.getString(3);
+            String address = requests.getString(4);
+            String city = requests.getString(5);
+            String user_name = requests.getString(6);
+            String creditor_name = requests.getString(7);
+
+            RequestForCredit request = new RequestForCredit();
+            request.setCreditor(creditor_name);
+            request.setSum(sum);
+            request.setCurrency(currency);
+            request.setTrusted_person(trusted_person);
+            request.setAddress(address);
+            request.setCity(city);
+            request.setCreditor_user_name(user_name);
+
+            Button button_accept = new Button("Accept");
+            button_accept.setOnAction(actionEvent -> {
+                dbHandler.insertCredit(request);
+                dbHandler.deleteRequest(request);
+                try {
+                    requests_refresh();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            });
+            request.setButton_accept(button_accept);
+
+            Button button_reject = new Button("Reject");
+            button_reject.setOnAction(actionEvent -> {
+                dbHandler.deleteRequest(request);
+                try {
+                    requests_refresh();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            });
+            request.setButton_reject(button_reject);
+
+
+            credit_requests_list.add(request);
+        }
+
+        request_creditor_column.setCellValueFactory(new PropertyValueFactory<RequestForCredit, String>("creditor"));
+        request_sum_column.setCellValueFactory(new PropertyValueFactory<RequestForCredit, Float>("sum"));
+        request_currency_column.setCellValueFactory(new PropertyValueFactory<RequestForCredit, String>("currency"));
+        request_trusted_person_column.setCellValueFactory(new PropertyValueFactory<RequestForCredit, String>("trusted_person"));
+        request_address_column.setCellValueFactory(new PropertyValueFactory<RequestForCredit, String>("address"));
+        request_city_column.setCellValueFactory(new PropertyValueFactory<RequestForCredit, String>("city"));
+        accept_button_column.setCellValueFactory(new PropertyValueFactory<RequestForCredit, Button>("button_accept"));
+        reject_button_column.setCellValueFactory(new PropertyValueFactory<RequestForCredit, Button>("button_reject"));
+
+        credit_requests_table.setItems(credit_requests_list);
+    }
+
+
     private void show_sum_statistics_tables() {
 
         transaction_table.setVisible(false);
@@ -476,6 +579,11 @@ public class IndexTestController {
         each_quarter_transactions_sum_table.setVisible(false);
         each_country_transactions_sum_table.setVisible(false);
         each_city_transactions_sum_table.setVisible(false);
+    }
+
+    public void requests_refresh() throws SQLException {
+        ResultSet requests_all = dbHandler.selectCreditRequests();
+        show_table_requests(requests_all);
     }
 
     private Optional<ButtonType> select_currency_alert() {

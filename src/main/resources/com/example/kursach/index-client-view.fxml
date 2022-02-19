@@ -63,7 +63,7 @@
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <TableView fx:id="credits_table" prefHeight="516.0" prefWidth="800.0">
+                        <TableView fx:id="credits_table" layoutX="1.0" prefHeight="356.0" prefWidth="800.0">
                            <columns>
                               <TableColumn fx:id="amount_column" prefWidth="149.0" text="Amount" />
                               <TableColumn fx:id="currency_column" prefWidth="140.0" text="Currency" />
@@ -71,6 +71,11 @@
                               <TableColumn fx:id="buttons_column" prefWidth="75.0" />
                            </columns>
                         </TableView>
+                        <Button fx:id="request_for_credit_button" layoutX="14.0" layoutY="365.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="144.0" style="-fx-background-color: #2E3348;" text="Request for credit" textAlignment="RIGHT" textFill="#fcf6f6">
+                           <font>
+                              <Font name="Leelawadee UI Semilight" size="15.0" />
+                           </font>
+                        </Button>
                      </children>
                   </AnchorPane>
                </content>

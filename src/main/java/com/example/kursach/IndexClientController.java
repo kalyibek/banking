@@ -7,7 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-import com.example.kursach.classes.Client;
+import com.example.kursach.models.Client;
 import com.example.kursach.classes.Credit;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -71,6 +71,9 @@ public class IndexClientController {
     private Button exit_button;
 
     @FXML
+    private Button request_for_credit_button;
+
+    @FXML
     private Label first_name_label;
 
     @FXML
@@ -110,6 +113,11 @@ public class IndexClientController {
         exit_button.setOnAction(actionEvent -> {
             load_window("hello-view.fxml");
             exit_button.getScene().getWindow().hide();
+        });
+
+        request_for_credit_button.setOnAction(actionEvent -> {
+            load_request_window("request-view.fxml", this_client);
+            request_for_credit_button.getScene().getWindow().hide();
         });
 
 
@@ -212,6 +220,26 @@ public class IndexClientController {
         alert.setHeaderText(null);
         alert.setContentText(content);
         alert.showAndWait();
+    }
+
+
+    private void load_request_window(String url, Client client) {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(HelloController.class.getResource(url));
+
+        try {
+            loader.load();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        RequestForCreditController controller = loader.getController();
+        controller.initData(client);
+
+        Parent root = loader.getRoot();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.show();
     }
 
 

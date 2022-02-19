@@ -6,7 +6,7 @@ import java.sql.Date;
 import java.util.ResourceBundle;
 
 import com.example.kursach.classes.PasswordGenerator;
-import com.example.kursach.classes.Transaction;
+import com.example.kursach.models.Transaction;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
