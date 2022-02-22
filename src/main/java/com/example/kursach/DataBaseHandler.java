@@ -216,18 +216,19 @@ public class DataBaseHandler extends Configs {
             PreparedStatement sub_query = getDbConnection().prepareStatement(client_id_request);
             sub_query.setString(1, request.getCreditor_user_name());
             user_names = sub_query.executeQuery();
-            String user_name = null;
+            String user_id = null;
             while (user_names.next()) {
-                user_name = user_names.getString(1);
+                user_id = user_names.getString(1);
             }
 
             PreparedStatement prSt = getDbConnection().prepareStatement(insert);
             prSt.setFloat(1, request.getSum());
             prSt.setString(2, request.getCurrency());
             prSt.setDate(3, new Date(System.currentTimeMillis()));
-            prSt.setString(4, user_name);
+            prSt.setString(4, user_id);
 
             prSt.executeUpdate();
+            updateUserMoney(user_id, request.getCurrency(), request.getSum());
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -560,6 +561,30 @@ public class DataBaseHandler extends Configs {
 
         return resSet;
 
+    }
+
+    public void updateUserMoney(String user_id, String currency, float amount) {
+
+        String money;
+        if (currency.equals("KGS")) {
+            money = Const.CLIENTS_MONEYSOM;
+        } else {
+            money = Const.CLIENTS_MONEYDOLLAR;
+        }
+
+        String update = "UPDATE " + Const.CLIENT_TABLE + " SET " + money + "=" + money + "+?" +
+                " WHERE " + Const.CLIENTS_ID + "=?";
+
+        try {
+
+            PreparedStatement prSt = getDbConnection().prepareStatement(update);
+            prSt.setFloat(1, amount);
+            prSt.setString(2, user_id);
+
+            prSt.executeUpdate();
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 }

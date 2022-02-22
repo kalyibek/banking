@@ -172,7 +172,6 @@ public class IndexClientController {
             String debtor = credits.getString(4);
 
             Credit credit = new Credit(amount, currency, credit_date, debtor);
-            credit.setRepay(new Button("action"));
 
             credits_list.add(credit);
 
@@ -181,7 +180,6 @@ public class IndexClientController {
         amount_column.setCellValueFactory(new PropertyValueFactory<Credit, Float>("amount"));
         currency_column.setCellValueFactory(new PropertyValueFactory<Credit, String>("currency"));
         date_column.setCellValueFactory(new PropertyValueFactory<Credit, Date>("date"));
-        buttons_column.setCellValueFactory(new PropertyValueFactory<Credit, Button>("repay"));
 
         credits_table.setItems(credits_list); // ОТОБРАЖЕНИЕ ТАБЛИЦЫ КРЕДИТОВ
     }
